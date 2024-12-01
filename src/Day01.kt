@@ -1,18 +1,19 @@
+import kotlin.math.abs
+
 fun main() {
     fun part1(input: List<String>): Int {
-        return input.size
+        return input.flatMap { it.split("\\s+".toRegex()) }.map { it.toInt() }.withIndex().partition { it.index % 2 == 0 }.let {
+            it.first.map { it.value }.sorted().zip(it.second.map { it.value }.sorted())
+        }.sumOf { abs(it.first - it.second) }
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        return input.flatMap { it.split("\\s+".toRegex()) }.map { it.toInt() }.withIndex().partition { it.index % 2 == 0 }.let {
+            val f = it.first.map { it.value }
+            val s = it.second.map { it.value }.groupingBy { it }.eachCount()
+            f.sumOf { it * s.getOrDefault(it, 0) }
+        }
     }
-
-    // Test if implementation meets criteria from the description, like:
-    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day01")
